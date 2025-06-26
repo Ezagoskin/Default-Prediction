@@ -13,6 +13,8 @@ import numpy as np
 import pandas as pd
 import lightgbm as lgb
 import pickle
+from sklearn.preprocessing import LabelEncoder, PolynomialFeatures, MinMaxScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer as Imputer
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -31,11 +33,9 @@ warnings.filterwarnings('ignore')
 
 st.code("""
 app_test = pd.read_csv('application_test.csv')
-print(app_test.shape)
 app_test.head()
 """)
 app_test = pd.read_csv('application_test.csv')
-print(app_test.shape)
 st.dataframe(app_test.head())
 
 st.code("""
