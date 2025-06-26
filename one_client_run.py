@@ -39,7 +39,7 @@ app_test.head()
 app_test = pd.read_csv('application_test.csv')
 st.dataframe(app_test.head())
 
-number = st.number_input(label="Insert a number", min_value=0, max_value=10, step=1)
+number = st.number_input(label="Choose a row", min_value=0, max_value=40000, step=1)
 
 st.code("""
 app_test = app_test.iloc[number:number + 1]
