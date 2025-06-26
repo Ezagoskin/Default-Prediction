@@ -17,6 +17,7 @@ from sklearn.preprocessing import LabelEncoder, PolynomialFeatures, MinMaxScaler
 from sklearn.impute import SimpleImputer as Imputer
 
 import warnings
+
 warnings.filterwarnings('ignore')
 
 st.header('Import')
@@ -40,9 +41,11 @@ st.dataframe(app_test.head())
 
 st.code("""
 app_test = app_test.iloc[0:1]
+print(app_test.shape)
 app_test
 """)
 app_test = app_test.iloc[0:1]
+st.write(app_test.shape)
 st.dataframe(app_test)
 
 st.header('Categorical features')
@@ -64,18 +67,18 @@ categorical = ['NAME_CONTRACT_TYPE', 'CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_RE
 with open('encoder.pkl', 'rb') as f:
     encoder = pickle.load(f)
 
-
 st.code("""
 one_hot_encoded = encoder.transform(app_test[categorical])
 one_hot_df = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(categorical))
 app_test = pd.concat([app_test.drop(categorical, axis=1), one_hot_df], axis=1)
-app_test.shape
+print(app_test.shape)
+app_test
 """)
 one_hot_encoded = encoder.transform(app_test[categorical])
 one_hot_df = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(categorical))
 app_test = pd.concat([app_test.drop(categorical, axis=1), one_hot_df], axis=1)
 st.write(app_test.shape)
-
+st.dataframe(app_test)
 
 st.header('Numerical features')
 
@@ -95,7 +98,6 @@ print(
 
 app_test['DAYS_BIRTH'] = abs(app_test['DAYS_BIRTH'])
 
-
 st.header('Additional variables')
 
 st.code("""
@@ -105,6 +107,8 @@ app_test_domain['CREDIT_INCOME_PERCENT'] = app_test_domain['AMT_CREDIT'] / app_t
 app_test_domain['ANNUITY_INCOME_PERCENT'] = app_test_domain['AMT_ANNUITY'] / app_test_domain['AMT_INCOME_TOTAL']
 app_test_domain['CREDIT_TERM'] = app_test_domain['AMT_ANNUITY'] / app_test_domain['AMT_CREDIT']
 app_test_domain['DAYS_EMPLOYED_PERCENT'] = app_test_domain['DAYS_EMPLOYED'] / app_test_domain['DAYS_BIRTH']
+print(app_test_domain.shape)
+app_test_domain
 """)
 
 app_test_domain = app_test.copy()
@@ -113,7 +117,8 @@ app_test_domain['CREDIT_INCOME_PERCENT'] = app_test_domain['AMT_CREDIT'] / app_t
 app_test_domain['ANNUITY_INCOME_PERCENT'] = app_test_domain['AMT_ANNUITY'] / app_test_domain['AMT_INCOME_TOTAL']
 app_test_domain['CREDIT_TERM'] = app_test_domain['AMT_ANNUITY'] / app_test_domain['AMT_CREDIT']
 app_test_domain['DAYS_EMPLOYED_PERCENT'] = app_test_domain['DAYS_EMPLOYED'] / app_test_domain['DAYS_BIRTH']
-
+st.write(app_test_domain.shape)
+st.dataframe(app_test_domain)
 
 st.header('Light Gradient Boosting Machine')
 st.code("""
@@ -128,25 +133,18 @@ with open('imputer.pkl', 'rb') as f:
 with open('scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
 
-
 st.code("""
 domain_features_names = list(app_test_domain.columns)
-
 domain_features_test = imputer.transform(app_test_domain)
-
 domain_features_test = scaler.transform(domain_features_test)
-
 bst = lgb.Booster(model_file='model.txt')
-
-bst.predict(domain_features_test)
+res = bst.predict(domain_features_test)
+print('Probability of default is', res)
 """)
 
 domain_features_names = list(app_test_domain.columns)
-
 domain_features_test = imputer.transform(app_test_domain)
-
 domain_features_test = scaler.transform(domain_features_test)
-
 bst = lgb.Booster(model_file='model.txt')
-
-print(bst.predict(domain_features_test))
+res = bst.predict(domain_features_test)
+st.write('Probability of default is', res)
