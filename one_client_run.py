@@ -46,7 +46,6 @@ app_test = app_test.iloc[0:1]
 st.dataframe(app_test)
 
 st.header('Categorical features')
-"""## Categorical features"""
 
 st.code("""
 categorical = ['NAME_CONTRACT_TYPE', 'CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_REALTY',
@@ -75,11 +74,10 @@ app_test.shape
 one_hot_encoded = encoder.transform(app_test[categorical])
 one_hot_df = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(categorical))
 app_test = pd.concat([app_test.drop(categorical, axis=1), one_hot_df], axis=1)
-print(app_test.shape)
+st.write(app_test.shape)
 
 
 st.header('Numerical features')
-"""## Numerical features"""
 
 st.code("""
 app_test['DAYS_EMPLOYED_ANOM'] = app_test["DAYS_EMPLOYED"] == 365243
@@ -99,8 +97,6 @@ app_test['DAYS_BIRTH'] = abs(app_test['DAYS_BIRTH'])
 
 
 st.header('Additional variables')
-"""## Additional variables"""
-
 
 st.code("""
 app_test_domain = app_test.copy()
@@ -118,8 +114,8 @@ app_test_domain['ANNUITY_INCOME_PERCENT'] = app_test_domain['AMT_ANNUITY'] / app
 app_test_domain['CREDIT_TERM'] = app_test_domain['AMT_ANNUITY'] / app_test_domain['AMT_CREDIT']
 app_test_domain['DAYS_EMPLOYED_PERCENT'] = app_test_domain['DAYS_EMPLOYED'] / app_test_domain['DAYS_BIRTH']
 
-"""## Light Gradient Boosting Machine"""
 
+st.header('Light Gradient Boosting Machine')
 st.code("""
 with open('imputer.pkl', 'rb') as f:
     imputer = pickle.load(f)
@@ -154,8 +150,3 @@ domain_features_test = scaler.transform(domain_features_test)
 bst = lgb.Booster(model_file='model.txt')
 
 print(bst.predict(domain_features_test))
-
-
-
-st.header('End')
-"""## End"""
