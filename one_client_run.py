@@ -77,8 +77,13 @@ print(app_test.shape)
 app_test
 """)
 one_hot_encoded = encoder.transform(app_test[categorical])
+print(one_hot_encoded.shape)
 one_hot_df = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(categorical))
+print(one_hot_df.shape)
 app_test = pd.concat([app_test.drop(categorical, axis=1), one_hot_df], axis=1)
+print(app_test.shape)
+st.write(one_hot_encoded.shape)
+st.write(one_hot_df.shape)
 st.write(app_test.shape)
 st.dataframe(app_test)
 
