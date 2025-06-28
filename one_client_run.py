@@ -94,9 +94,6 @@ st.header('Numerical features')
 st.code("""
 app_test['DAYS_EMPLOYED_ANOM'] = app_test["DAYS_EMPLOYED"] == 365243
 app_test["DAYS_EMPLOYED"].replace({365243: np.nan}, inplace=True)
-print(
-    'There are %d anomalies in the test data out of %d entries' % (app_test["DAYS_EMPLOYED_ANOM"].sum(), len(app_test)))
-
 app_test['DAYS_BIRTH'] = abs(app_test['DAYS_BIRTH'])
 """)
 
